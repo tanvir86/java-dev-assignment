@@ -34,6 +34,7 @@ class AppTest {
     @Test
     void sendRequest() throws IOException, ClassNotFoundException, InterruptedException {
         for (int i = 0; i < 5; i++) {
+            // opening new socket for every request here. we can also send multiple requests with one socket.
             Socket socket = new Socket(host.getHostName(), PORT);
             ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
             objectOutputStream.writeObject("request # " + i);
