@@ -16,7 +16,7 @@ called [`PrimeCalculationManager`](app/src/main/java/socket/server/manager/Prime
 the count of prime numbers less or equal to the given input n. There might be lots of other manager classes like this.
 
 Our desired socket server should be able to handle subsequent requests from clients. So one specification of the socket
-server would be, it must be able to handle incoming requests in parallel.
+server would be, it must be able to handle incoming requests in parallel **for every socket connection**.
 
 TCP/IP Socket Client
 --------------------
@@ -39,15 +39,17 @@ following:
 
 Tasks
 -----
-The goal of this project is to develop a socket server which will receive incoming requests from clients. The incoming
+1. Implement the socket server which will receive incoming requests from clients. The incoming
 requests object will have 3 parameters.
 
-- **managerName**: The server will instantiate an instance of the manager class from the managerName. Here we have a
+ - **managerName**: The server will instantiate an instance of the manager class from the managerName. Here we have a
   constraint. We have to instantiate the manager class using reflection.
-- **method**: It denotes which method we need to call for that specific manager. Here we will also have the same
+ - **method**: It denotes which method we need to call for that specific manager. Here we will also have the same
   constraint. We will get the method using reflection and invoke later.
-- **args**: Denotes the arguments need to invoke the method.
+ - **args**: Denotes the arguments need to invoke the method.
 
-So the server will execute the requested method with provided arguments and will return the result to the client.
+ So the server will execute the requested method with provided arguments and will return the result to the client.
+
+2. Implement the socket client which will send subsequent requests to server with appropriate request object. **Important:** we can use one socket connection to send multiple requests.  
 
 
