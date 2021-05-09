@@ -52,4 +52,17 @@ requests object will have 3 parameters.
 
 2. Implement the socket client which will send subsequent requests to server with appropriate request object. **Important:** we can use one socket connection to send multiple requests.  
 
+For example if we send the following 4 numbers squentially in the same socket connection:-
+```
+10, 1000000, 200, 50000
+```
+Then we are expecting response in the following order:-
+```
+4 // n = 10
+46 // n = 200
+5133 // n = 50000
+78498 // n = 1000000
+```
+
+
 
