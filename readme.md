@@ -64,5 +64,12 @@ Then we are expecting response in the following order:-
 78498 // n = 1000000
 ```
 
-
+Assignment Instructions
+------------------------
+1. Please create a new repository in your Github by forking this repository and then make the necessary changes in your own repository as per instruction.
+2. Commit to GitHub from the initial setup, commit early and often. Don’t commit everything after finishing the assignment. By looking into your commit message, we will try to get an idea how you approached the problem. 
+3. Provide a readme file which will contain how to run and package your application.
+4. Try to make sure, your implemented functionalities are as complete as possible based on the provided use cases including any corner cases.
+5. You are free to use any third-party library if you want. Just make sure that you have given the instructions on the readme file regarding how to install those.
+6. When you are done, please make sure to provide access to ['cefalolab'](https://github.com/cefalolab) user to your repository so that we can review your source code.
 
