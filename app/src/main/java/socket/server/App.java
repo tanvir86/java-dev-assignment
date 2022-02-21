@@ -23,17 +23,7 @@ public class App {
     private ServerSocket server;
 
     public void startServerAndAcceptRequest() {
-        try {
-            this.server = new ServerSocket(PORT);
-        } catch (IOException ioException){
-            System.err.println("Unable to open port "+ PORT + ". Check whether port already in use by other apps");
-            ioException.printStackTrace();
-            System.exit(1);
-        } catch (IllegalArgumentException illegalArgumentException) {
-            System.err.println("Given port number is not valid. Acceptable port number range (0,65535]");
-            illegalArgumentException.printStackTrace();
-            System.exit(1);
-        }
+        this.startServer();
 
         while (this.keepListening) {
             System.out.println("Waiting for the client request");
@@ -47,15 +37,31 @@ public class App {
 
         }
 
+        this.closeServer();
+    }
+
+    private void startServer(){
+        try {
+            this.server = new ServerSocket(PORT);
+        } catch (IOException ioException){
+            System.err.println("Unable to open port "+ PORT + ". Check whether port already in use by other apps");
+            ioException.printStackTrace();
+            System.exit(1);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            System.err.println("Given port number is not valid. Acceptable port number range (0,65535]");
+            illegalArgumentException.printStackTrace();
+            System.exit(1);
+        }
+    }
+
+    private void closeServer(){
         try{
             System.out.println("Shutting down socket server");
-            server.close();
+            this.server.close();
         } catch (IOException ioException){
             // Ignore, we are closing the application anyway
         }
-
     }
-
 
     public static void main(String[] args){
         new App().startServerAndAcceptRequest();
