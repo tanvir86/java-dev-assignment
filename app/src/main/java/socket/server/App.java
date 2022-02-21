@@ -4,8 +4,6 @@
 package socket.server;
 
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -22,22 +20,44 @@ public class App {
 
     public static volatile boolean keepListening = true;
 
-    public void startServerAndAcceptRequest() throws IOException {
-        ServerSocket server = new ServerSocket(PORT);
-        System.out.println("Starting socket server");
+    private ServerSocket server;
+
+    public void startServerAndAcceptRequest() {
+        try {
+            this.server = new ServerSocket(PORT);
+        } catch (IOException ioException){
+            System.err.println("Unable to open port "+ PORT + ". Check whether port already in use by other apps");
+            ioException.printStackTrace();
+            System.exit(1);
+        } catch (IllegalArgumentException illegalArgumentException) {
+            System.err.println("Given port number is not valid. Acceptable port number range (0,65535]");
+            illegalArgumentException.printStackTrace();
+            System.exit(1);
+        }
 
         while (this.keepListening) {
             System.out.println("Waiting for the client request");
-            Socket socket = server.accept();
-            ClientHandler clientHandler = new ClientHandler(socket);
-            this.workers.execute(clientHandler);
+            try{
+                Socket socket = this.server.accept();
+                ClientHandler clientHandler = new ClientHandler(socket);
+                this.workers.execute(clientHandler);
+            } catch (IOException ioException){
+                System.out.println(ioException.getClass());
+            }
+
         }
-        System.out.println("Shutting down socket server");
-        server.close();
+
+        try{
+            System.out.println("Shutting down socket server");
+            server.close();
+        } catch (IOException ioException){
+            // Ignore, we are closing the application anyway
+        }
+
     }
 
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args){
         new App().startServerAndAcceptRequest();
     }
 }

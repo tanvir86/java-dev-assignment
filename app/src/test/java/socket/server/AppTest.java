@@ -20,11 +20,7 @@ class AppTest {
     @BeforeEach
     void initialize() throws IOException {
         Runnable runnable = () -> {
-            try {
-                new App().startServerAndAcceptRequest();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            new App().startServerAndAcceptRequest();
         };
         Thread serverThread = new Thread(runnable);
         serverThread.start();
