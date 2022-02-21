@@ -22,7 +22,7 @@ class AppTest {
         Runnable runnable = () -> {
             try {
                 new App().startServerAndAcceptRequest();
-            } catch (IOException | ClassNotFoundException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         };

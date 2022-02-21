@@ -8,36 +8,36 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class App {
     private static final int PORT = 9876;
-    private static final String EXIT = "EXIT";
+    /**
+     * Pool of worker threads of unbounded size. A new thread will be created
+     * for each concurrent connection, and old threads will be shut down if they
+     * remain unused for about 1 minute.
+     */
+    private final ExecutorService workers = Executors.newCachedThreadPool();
 
-    public void startServerAndAcceptRequest() throws IOException, ClassNotFoundException {
+    public static volatile boolean keepListening = true;
+
+    public void startServerAndAcceptRequest() throws IOException {
         ServerSocket server = new ServerSocket(PORT);
         System.out.println("Starting socket server");
 
-        while (true) {
+        while (this.keepListening) {
             System.out.println("Waiting for the client request");
             Socket socket = server.accept();
-            ObjectInputStream objectInputStream = new ObjectInputStream(socket.getInputStream());
-            String message = (String) objectInputStream.readObject();
-            System.out.println("Message from client: " + message);
-
-
-            ObjectOutputStream objectOutputStream = new ObjectOutputStream(socket.getOutputStream());
-            objectOutputStream.writeObject("Hi client : " + message);
-            objectInputStream.close();
-            objectOutputStream.close();
-            if (message.equalsIgnoreCase(EXIT))
-                break;
+            ClientHandler clientHandler = new ClientHandler(socket);
+            this.workers.execute(clientHandler);
         }
         System.out.println("Shutting down socket server");
         server.close();
     }
 
 
-    public static void main(String[] args) throws IOException, ClassNotFoundException{
+    public static void main(String[] args) throws IOException {
         new App().startServerAndAcceptRequest();
     }
 }
